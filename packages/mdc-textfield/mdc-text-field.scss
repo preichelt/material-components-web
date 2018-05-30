@@ -33,6 +33,7 @@
 // postcss-bem-linter: define text-field
 
 .mdc-text-field {
+  // Old Stuff
   @include mdc-text-field-bottom-line-color($mdc-text-field-bottom-line-idle);
   @include mdc-text-field-hover-bottom-line-color($mdc-text-field-bottom-line-hover);
   @include mdc-text-field-line-ripple-color_(primary);
@@ -42,10 +43,55 @@
   @include mdc-text-field-fullwidth-bottom-line-color($mdc-text-field-fullwidth-bottom-line-color);
   @include mdc-text-field-icon-color($mdc-text-field-icon-color);
 
-  display: inline-block;
-  position: relative;
+  // New Stuff
+  @include mdc-ripple-surface;
+  // Text Field Box intentionally omits press ripple, so each state needs to be specified individually
+  @include mdc-states-base-color($mdc-text-field-ink-color);
+  @include mdc-states-hover-opacity(mdc-states-opacity($mdc-text-field-ink-color, hover));
+  @include mdc-states-focus-opacity(
+    mdc-states-opacity($mdc-text-field-ink-color, focus),
+    $has-nested-focusable-element: true
+  );
+  @include mdc-ripple-radius-bounded;
+  @include mdc-text-field-box-corner-radius($mdc-text-field-border-radius);
+  @include mdc-text-field-box-fill-color($mdc-text-field-box-background);
+  @include mdc-floating-label-float-position($mdc-text-field-box-label-position-y);
+  @include mdc-floating-label-shake-animation(text-field-box);
+
+  // Old Stuff
+  // display: inline-block;
+  // position: relative;
   margin-bottom: 8px;
   will-change: opacity, transform, color;
+
+  // New stuff
+  display: inline-flex;
+  position: relative;
+  height: 56px;
+  margin-top: 16px;
+  overflow: hidden;
+
+  .mdc-text-field__input {
+    align-self: flex-end;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 20px 16px 0;
+  }
+
+  .mdc-floating-label {
+    @include mdc-rtl-reflexive-position(left, 16px);
+
+    position: absolute;
+    bottom: 20px;
+    width: calc(100% - #{$mdc-text-field-icon-padding});
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    overflow: hidden;
+    // Force the label into its own layer to prevent to prevent visible layer promotion adjustments
+    // when the ripple is activated behind it.
+    will-change: transform;
+  }
 }
 
 .mdc-text-field__input {
@@ -100,17 +146,18 @@
   @include mdc-text-field-outlined-dense_;
 }
 
-.mdc-text-field--box {
-  @include mdc-text-field-box_;
-}
+// ----------------------------DELETING----------------------------
+// .mdc-text-field--box {
+//   @include mdc-text-field-box_;
+// }
 
-.mdc-text-field--box.mdc-text-field--disabled {
-  @include mdc-text-field-box-disabled_;
-}
+// .mdc-text-field--box.mdc-text-field--disabled {
+//   @include mdc-text-field-box-disabled_;
+// }
 
-.mdc-text-field--box.mdc-text-field--dense {
-  @include mdc-text-field-box-dense_;
-}
+// .mdc-text-field--box.mdc-text-field--dense {
+//   @include mdc-text-field-box-dense_;
+// }
 
 .mdc-text-field--with-leading-icon {
   @include mdc-text-field-with-leading-icon_;
@@ -144,18 +191,18 @@
   @include mdc-text-field-dense-with-trailing-icon_;
 }
 
-.mdc-text-field--upgraded:not(.mdc-text-field--fullwidth):not(.mdc-text-field--box) {
-  display: inline-flex;
-  position: relative;
-  align-items: flex-end;
-  box-sizing: border-box;
-  margin-top: 16px;
+// .mdc-text-field--upgraded:not(.mdc-text-field--fullwidth):not(.mdc-text-field--box) {
+//   display: inline-flex;
+//   position: relative;
+//   align-items: flex-end;
+//   box-sizing: border-box;
+//   margin-top: 16px;
 
-  // stylelint-disable-next-line selector-max-specificity
-  &:not(.mdc-text-field--textarea):not(.mdc-text-field--outlined) {
-    height: 48px;
-  }
-}
+//   // stylelint-disable-next-line selector-max-specificity
+//   &:not(.mdc-text-field--textarea):not(.mdc-text-field--outlined) {
+//     height: 48px;
+//   }
+// }
 
 .mdc-text-field--dense {
   @include mdc-text-field-dense_;
@@ -186,7 +233,7 @@
     margin-bottom: 4px;
   }
 
-  .mdc-text-field--box + &,
+  .mdc-text-field + &,
   .mdc-text-field--outlined + & {
     margin-right: 16px;
     margin-left: 16px;
